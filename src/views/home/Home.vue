@@ -1,138 +1,42 @@
 <!--  -->
 <template>
   <div id="home">
-      <nav-bar class="home-nav">
-        <template v-slot:center>
-          <div>购物街</div>
-        </template>
-      </nav-bar>
-      <recommend-view :recommends="recommends"/>
-      <feature-view/>
-      <tab-control class="tabcontrol" :titles="['流行', '新款', '精选']"/>
+    <home-swiper :banners="banners"/>
+    <nav-bar class="home-nav">
+      <template v-slot:center>
+        <div>购物街</div>
+      </template>
+    </nav-bar>
+    <recommend-view :recommends="recommends"/>
+    <feature-view/>
+    <tab-control class="tabcontrol" :titles="['流行', '新款', '精选']"/>
+    <goods-list></goods-list>
 
-    <ul>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-      <li>111</li>
-    </ul>
   </div>
 </template>
 
 <script>
+import HomeSwiper from './childComps/HomeSwiper.vue'
 import RecommendView from './childComps/RecomendView.vue'
 import FeatureView from './childComps/FeatureView.vue'
 
 import NavBar from 'components/common/navbar/NavBar.vue'
 import TabControl from 'components/content/tabControl/TabControl.vue'
+import GoodsList from 'components/content/goods/GoodsList.vue'
 
-import {getHomeMultidata} from 'network/home.js'
+import {getHomeMultidata, getHomeGoods} from 'network/home.js'
 
 
 export default {
   name: "Home",
-  components: {    
+  components: { 
+    HomeSwiper,   
     RecommendView,
     FeatureView,
 
     NavBar,
-    TabControl
+    TabControl,
+    GoodsList
   },
   data() {
     return {
@@ -145,11 +49,31 @@ export default {
       }
     }    
   },
-  created() {
-    getHomeMultidata().then(res => {
-      this.banners = res.data.banner.list;
-      this.recommends = res.data.recommend.list;
+  methods: {
+    getHomeMultidata(){
+      getHomeMultidata().then(res => {
+        this.banners = res.data.banner.list;
+        this.recommends = res.data.recommend.list;
+      })
+    },
+    
+    getHomeGoods(type) {
+      const page = this.goods[type].page + 1
+      getHomeGoods(type, page).then(res => {
+      this.goods[type].list.push(...res.data.list);
+      this.goods[type].page += 1
     })
+    }
+
+  },
+  created() {
+    //请求轮播图及推荐数据
+    this.getHomeMultidata()
+
+    //请求商品数据
+    this.getHomeGoods('pop')
+    this.getHomeGoods('new')
+    this.getHomeGoods('sell')
   }
 }
 
