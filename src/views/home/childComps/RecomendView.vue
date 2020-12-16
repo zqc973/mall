@@ -16,7 +16,9 @@ export default {
   props: {
     recommends: {
       type: Array,
-      defualt: []
+      default() {
+        return []
+      }
     }
   },
   data () {

@@ -20,7 +20,9 @@ export default {
     link: String,
     activeColor: {
       type: String,
-      default: "#ff5777"
+      default() {
+        return "#ff5777"
+      } 
     }
   },
   data () {

@@ -15,7 +15,9 @@ export default {
   props: {
     titles: {
       type: Array,
-      default: []
+      default() {
+        return []
+      }
     }
   },
   data () {
@@ -26,13 +28,14 @@ export default {
   methods: {
     itemClick(index) {
       this.currentIndex = index;
+      this.$emit('tabClick', index)
     }
   }
 }
 </script>
 
 <style  scoped>
-  .tab-control {
+   .tab-control {
     display: flex;
     text-align: center;
     font-size: 15px;
@@ -41,19 +44,19 @@ export default {
     background-color: #fff;
   }
 
-  .tab-control-item{
+  .tab-control-item {
     flex: 1;
   }
-  .tab-control-item span{
+
+  .tab-control-item span {
     padding: 5px;
   }
 
   .active {
     color: var(--color-high-text);
-    
   }
 
   .active span {
-    border-bottom: 3px solid var(--color-high-text);
+    border-bottom: 3px solid var(--color-tint);
   }
 </style>

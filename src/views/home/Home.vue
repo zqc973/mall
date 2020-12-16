@@ -9,8 +9,10 @@
     </nav-bar>
     <recommend-view :recommends="recommends"/>
     <feature-view/>
-    <tab-control class="tabcontrol" :titles="['流行', '新款', '精选']"/>
-    <goods-list></goods-list>
+    <tab-control class="tab-control"
+                 :titles="['流行', '新款', '精选']"
+                 @tabClick="tabClick"/>
+    <goods-list :goods="showGoods"></goods-list>
 
   </div>
 </template>
@@ -46,10 +48,36 @@ export default {
         pop: {page: 0, list: []},
         new: {page: 0, list: []},
         sell: {page: 0, list: []}
-      }
+      },
+      currentType: 'pop'
     }    
   },
+  computed: {
+    showGoods(){
+      return this.goods[this.currentType].list
+    }
+  },
   methods: {
+    /**
+     *事件监听相关方法 
+     */
+    tabClick(index) {
+      switch (index){
+        case 0:
+          this.currentType = 'pop'
+          break;
+        case 1:
+          this.currentType = 'new'
+          break;
+        case 2: 
+          this.currentType = 'sell'
+          break; 
+      }
+    },
+
+    /**
+     *网络请求相关方法 
+     */
     getHomeMultidata(){
       getHomeMultidata().then(res => {
         this.banners = res.data.banner.list;
@@ -94,8 +122,9 @@ export default {
     z-index: 9;
   }
 
-  .tabcontrol{
+  .tab-control{
     position: sticky;
     top: 43px;
+    z-index: 9;
   }
 </style>
