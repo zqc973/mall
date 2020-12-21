@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-  <div>
+  <div class="nav-bar">
     <nav-bar>
       <template #left>
         <div class="back" @click="backClick">
@@ -51,9 +51,14 @@ export default {
 </script>
 
 <style scoped>
+  .nav-bar{
+    position: relative;
+    z-index: 9;
+    background-color: #fff;
+  }
   .title {
     display: flex;   
-    font-size: 12px; 
+    font-size: 13px; 
   }
   .title-item {
     flex: 1;

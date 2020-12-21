@@ -34,7 +34,6 @@ export default {
   methods: {
     imageLoad() {
       if(!this.isLoad){
-        console.log(22)
         this.$emit("swiperImgLoad");
         this.isLoad = true;
       }
